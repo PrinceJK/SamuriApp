@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using SamuraiApp.Domain;
 
 #nullable disable
 
@@ -8,17 +9,11 @@ namespace SamuraiApp.Data
 {
     public partial class SamuraiContext : DbContext
     {
-        public SamuraiContext()
-        {
-        }
 
-        public SamuraiContext(DbContextOptions<SamuraiContext> options)
-            : base(options)
-        {
-        }
 
-        public virtual DbSet<Quote> Quotes { get; set; }
-        public virtual DbSet<Samurai> Samurais { get; set; }
+        public DbSet<Quote> Quotes { get; set; }
+        public DbSet<Samurai> Samurais { get; set; }
+        public DbSet<Battle> Battles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -30,20 +25,17 @@ namespace SamuraiApp.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
-
-            modelBuilder.Entity<Quote>(entity =>
-            {
-                entity.HasIndex(e => e.SamuraiId, "IX_Quotes_SamuraiId");
-
-                entity.HasOne(d => d.Samurai)
-                    .WithMany(p => p.Quotes)
-                    .HasForeignKey(d => d.SamuraiId);
-            });
-
-            OnModelCreatingPartial(modelBuilder);
+            modelBuilder.Entity<Samurai>()
+                .HasMany(s => s.Battles)
+                .WithMany(s => s.Samurais)
+                .UsingEntity<BattleSamurai>
+                (bs => bs.HasOne<Battle>()
+                .WithMany(),
+                bs => bs.HasOne<Samurai>()
+                .WithMany())
+                .Property(bs => bs.DateJoined)
+                .HasDefaultValueSql("getdate()");
         }
 
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
