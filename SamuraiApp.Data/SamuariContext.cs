@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SamuraiApp.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace SamuraiApp.Data
 {
     public class SamuariContext : DbContext
     {
-
+        public DbSet<Samurai> Samurais { get; set; }
+        public DbSet<Quote> Quotes { get; set; }
     }
 }
