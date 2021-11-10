@@ -2,6 +2,7 @@
 using SamuraiApp.Data;
 using SamuraiApp.Domain;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SamuraiApp.UI
@@ -20,7 +21,9 @@ namespace SamuraiApp.UI
             //QueryFilters();
             //QueryAggregates();
             //RetrieveAndUpdateSamuari();
-            RetrieveAndUpdateMultipleSamurais();
+            //RetrieveAndUpdateMultipleSamurais();
+            //RetrieveAndDeleteASamurai();
+            QueryAndUpdateBattles_Disconnected(); 
         }
         private static void AddVariousTypes()
         {
@@ -84,6 +87,31 @@ namespace SamuraiApp.UI
             var samurais = _context.Samurais.Skip(1).Take(4).ToList();
             samurais.ForEach(x => x.Name += "San");
             _context.SaveChanges();
+        }
+        private static void RetrieveAndDeleteASamurai()
+        {
+            var samurai = _context.Samurais.Find(18);
+            _context.Samurais.Remove(samurai);
+            _context.SaveChanges();
+        }
+        private static void QueryAndUpdateBattles_Disconnected()
+        {
+            List<Battle> disconnectedBattles;
+            using (var context1 = new SamuraiContext())
+            {
+                disconnectedBattles = _context.Battles.ToList();
+
+            }//
+            disconnectedBattles.ForEach(b =>
+            {
+                b.StartDate = new DateTime(1570, 01, 01);
+                b.EndDate = new DateTime(1570, 12, 1);
+            });
+            using (var context2 = new SamuraiContext())
+            {
+                context2.UpdateRange(disconnectedBattles);
+                context2.SaveChanges();
+            }
         }
     }
 }
