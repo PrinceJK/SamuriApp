@@ -19,7 +19,10 @@ namespace SamuraiApp.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Samurai;Integrated Security=True");
+                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Samurai;Integrated Security=True")
+                    .LogTo(Console.WriteLine, new [] {DbLoggerCategory.Database.Command.Name},
+                    Microsoft.Extensions.Logging.LogLevel.Information)
+                    .EnableSensitiveDataLogging();
             }
         }
 
