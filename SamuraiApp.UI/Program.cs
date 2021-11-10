@@ -14,9 +14,13 @@ namespace SamuraiApp.UI
         {
             //AddSamuraisByName("Shimada", "Okamoto", "Kikuchio", "Hayashida");
             //GetSamurais();
-            AddVariousTypes();
-            Console.WriteLine("Press any key...");
-            Console.ReadKey();
+            //AddVariousTypes();
+            //Console.WriteLine("Press any key...");
+            //Console.ReadKey();
+            //QueryFilters();
+            //QueryAggregates();
+            //RetrieveAndUpdateSamuari();
+            RetrieveAndUpdateMultipleSamurais();
         }
         private static void AddVariousTypes()
         {
@@ -52,6 +56,34 @@ namespace SamuraiApp.UI
             {
                 Console.WriteLine(samurai.Name);
             }
+        }
+
+        private static void QueryFilters()
+        {
+            //var name = "Samson";
+            //var samurais = _context.Samurais.Where(x => x.Name == name).ToList();
+            var filter = "J%";
+            var samurais = _context.Samurais
+                .Where(x => EF.Functions.Like(x.Name, filter)).ToList();
+        }
+        private static void QueryAggregates()
+        {
+            //var name = "Samson";
+            //var samurais = _context.Samurais.FirstOrDefault(x => x.Name == name);
+            var samurais = _context.Samurais.Find(2);
+        }
+
+        private static void RetrieveAndUpdateSamuari()
+        {
+            var samurai = _context.Samurais.FirstOrDefault();
+            samurai.Name += "San";
+            _context.SaveChanges();
+        }
+        private static void RetrieveAndUpdateMultipleSamurais()
+        {
+            var samurais = _context.Samurais.Skip(1).Take(4).ToList();
+            samurais.ForEach(x => x.Name += "San");
+            _context.SaveChanges();
         }
     }
 }
