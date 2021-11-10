@@ -12,13 +12,29 @@ namespace SamuraiApp.UI
        
         static void Main(string[] args)
         {
-            AddSamurai("Julie2", "Sampson3");
-            GetSamurais();
+            //AddSamuraisByName("Shimada", "Okamoto", "Kikuchio", "Hayashida");
+            //GetSamurais();
+            AddVariousTypes();
             Console.WriteLine("Press any key...");
             Console.ReadKey();
         }
+        private static void AddVariousTypes()
+        {
+            _context.AddRange(
+                new Samurai { Name = "Shimada" },
+                new Samurai { Name = "Okamoto" },
+                new Battle { Name = "Battle of Anegawa" },
+                new Battle { Name = "Battle of Nagashino" });
+            //_context.Samurais.AddRange(
+            //    new Samurai { Name = "Shimada" },
+            //    new Samurai { Name = "Okamoto" });
+            //_context.Battles.AddRange(
+            //    new Battle { Name = "Battle of Anegawa" },
+            //    new Battle { Name = "Battle of Nagashino" });
+            _context.SaveChanges();
+        }
 
-        private static void AddSamurai(params string [] names)
+        private static void AddSamuraisByName(params string [] names)
         {
             foreach (var name in names)
             {
