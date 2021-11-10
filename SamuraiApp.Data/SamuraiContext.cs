@@ -10,7 +10,10 @@ namespace SamuraiApp.Data
     public partial class SamuraiContext : DbContext
     {
 
-
+        public SamuraiContext()
+        {
+            base.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+        }
         public DbSet<Quote> Quotes { get; set; }
         public DbSet<Samurai> Samurais { get; set; }
         public DbSet<Battle> Battles { get; set; }
